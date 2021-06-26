@@ -1,2 +1,2 @@
-# haseismo
-Seismic Sensor MQTT for use with Home Assistant
+# HA Seismo
+Seismic Sensor with MQTT for use with Home Assistant
