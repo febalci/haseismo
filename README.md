@@ -29,8 +29,7 @@ The code is written on platformio.
 
 ## Notes:
 - Web Page: Use %% instead of % in css styles. Otherwise placeholder template fails in asyncweb. 
-or you can use #define TEMPLATE_PLACEHOLDER '~' in build parameters and can use ~PLACEHOLDER~ 
-instead of %PLACEHOLDER%
+or you can use #define TEMPLATE_PLACEHOLDER '~' in build parameters and can use \~PLACEHOLDER\~ instead of %PLACEHOLDER%
 - Openlog:
 	1. Uppercase / Lowercase letters both work, but prefer lowercase filenames.
 	2. When creating new file with append, it still creates LOG0000xx.TXT with 0 bytes. So delete this with rm first.
