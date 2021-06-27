@@ -2,6 +2,7 @@
 
 int RESET = 0; 
 int alarmcounter=0;
+boolean eqEnd=true;
 
 openlog OpenLog(115200);
 
@@ -33,9 +34,10 @@ void setup(){
   Rtc_3231.init(); // Init RTC
 
   initmqtt(); // Connect to MQTT Server
-  
+ 
   seismo.init(); // Init MPU6050
   seismo.calibrate();
+  publish_data(Rtc_3231.Date(),Rtc_3231.Time(),"0.0","0.0"); // Send MQTT EQ Details
   LED(ON,OFF,OFF);
 }
 
@@ -59,15 +61,19 @@ void loop(){
 
 // EARTHQUAKE!!!
   if (seismo.xy_vector_mag >= 1.0 || seismo.z_vector_mag >= 1.0) {
+    eqEnd = false;
     LED_quake(); // Light Red Led
-    publish_event(); // Send MQTT EQ Event
     publish_data(Rtc_3231.Date(),Rtc_3231.Time(),String(seismo.xy_vector_mag),String(seismo.z_vector_mag)); // Send MQTT EQ Details
     alarmcounter = 30; // Make Led Wait 3 Seconds
   } else {
     if (alarmcounter>0) alarmcounter--;
   }
-  if (alarmcounter==0) LED_quake_end(); // EQ Ends Red Led Off
-  
+  if (alarmcounter==0 && not eqEnd) {
+    LED_quake_end(); // EQ Ends Red Led Off
+    publish_data(Rtc_3231.Date(),Rtc_3231.Time(),"0.0","0.0"); // Reset EQ Values
+    eqEnd = true;
+  }
+
   delay(100);                
 }
 

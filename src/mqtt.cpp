@@ -8,8 +8,9 @@ char custom_MQTT_PASSWORD[custom_MQTT_PASSWORD_LEN];
 const char* CONFIG_FILE = "/ConfigMQTT.json";
 
 #define MQTT_PUB_EVENT "seismoha/event"
-#define MQTT_PUB_DATA  "seismoha/data"
- 
+#define MQTT_PUB_STATE  "seismoha/state"
+#define MQTT_PUB_AVAILABILITY  "seismoha/status" // online or offline
+
 AsyncMqttClient mqttClient;
 
 void connectToMqtt() {
@@ -20,6 +21,7 @@ void connectToMqtt() {
 void onMqttConnect(bool sessionPresent) {
   Serial.println("Connected to MQTT.");
   Serial.print("Session present: ");
+  publish_available();
   Serial.println(sessionPresent);
 }
 
@@ -42,20 +44,22 @@ void initmqtt() {
   //mqttClient.onSubscribe(onMqttSubscribe);
   //mqttClient.onUnsubscribe(onMqttUnsubscribe);
   mqttClient.onPublish(onMqttPublish);
+  mqttClient.setWill(MQTT_PUB_AVAILABILITY, 1, true, "offline");
   mqttClient.setServer(custom_MQTT_SERVER, atoi(custom_MQTT_PORT));
   // If your broker requires authentication (username and password), set them below
   mqttClient.setCredentials(custom_MQTT_USERNAME, custom_MQTT_PASSWORD);
   connectToMqtt();
 }
 
-void publish_event() {
-    uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_EVENT, 1, true, String("EQ").c_str());
-    Serial.printf("Publishing on topic %s at QoS 1, packetId: %i", MQTT_PUB_EVENT, packetIdPub1);
+void publish_available() {
+      uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_AVAILABILITY, 1, true, String("online").c_str());
+      Serial.printf("Publishing on topic %s at QoS 1, packetId: %i", MQTT_PUB_AVAILABILITY, packetIdPub1);
 }
+
 
 void publish_data(String eq_date, String eq_time, String eq_xy, String eq_z) {
 //    String msg = eq_date + "," + eq_time + "," + eq_xy + "," + eq_z;
     String msg = "{\"date\":\""+eq_date + "\",\"time\":\"" + eq_time + "\",\"xy\":\""+ eq_xy + "\",\"z\":\""+ eq_z +"\"}";
-    uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_DATA, 1, true, msg.c_str());
-    Serial.printf("Publishing on topic %s at QoS 1, packetId: %i", MQTT_PUB_DATA, packetIdPub1);
+    uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_STATE, 1, true, msg.c_str());
+    Serial.printf("Publishing on topic %s at QoS 1, packetId: %i", MQTT_PUB_STATE, packetIdPub1);
 }
