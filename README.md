@@ -27,6 +27,31 @@ The code is written on platformio.
 	- marvinroger/AsyncMqttClient@^0.8.2
 	- makuna/RTC@^2.3.5
 
+## HA Sensor
+```
+  - platform: mqtt
+    name: "Seismometer XY"
+    state_topic: "seismoha/state"
+    qos: 1
+    availability:
+      - topic: "seismoha/status"
+    payload_available: "online"
+    payload_not_available: "offline"
+    value_template: '{{ value_json["xy"] }}'
+    unit_of_measurement: g
+
+  - platform: mqtt
+    name: "Seismometer Z"
+    state_topic: "seismoha/state"
+    qos: 1
+    availability:
+      - topic: "seismoha/status"
+    payload_available: "online"
+    payload_not_available: "offline"
+    value_template: '{{ value_json["z"] }}'
+    unit_of_measurement: g
+```
+
 ## Notes:
 - Web Page: Use %% instead of % in css styles. Otherwise placeholder template fails in asyncweb. 
 or you can use #define TEMPLATE_PLACEHOLDER '~' in build parameters and can use \~PLACEHOLDER\~ instead of %PLACEHOLDER%
