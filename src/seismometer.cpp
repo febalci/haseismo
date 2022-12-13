@@ -11,11 +11,10 @@ char custom_MPU6050_SCALE[custom_MPU6050_SCALE_LEN];
 
 //Change this 3 variables if you want to fine tune the skecth to your needs.
 #ifdef DEBUG
-#define buffersize 100
+  #define buffersize 100
 #else
-#define buffersize 1000
+  #define buffersize 1000 //Amount of readings used to average, make it higher to get more precision but sketch will be slower  (default:1000)
 #endif
-//int buffersize=1000;     //Amount of readings used to average, make it higher to get more precision but sketch will be slower  (default:1000)
 int acel_deadzone=8;     //Acelerometer error allowed, make it lower to get more precision, but sketch may not converge  (default:8)
 int giro_deadzone=1;     //Giro error allowed, make it lower to get more precision, but sketch may not converge  (default:1)
 
