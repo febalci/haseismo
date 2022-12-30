@@ -1,6 +1,7 @@
 # HA Seismo - Earthquake Detection Sensor
 Seismic Sensor with MQTT for use with Home Assistant
 
+## UPDATE: This project is cancelled, will go on with seismoM5 project: https://github.com/febalci/seismoM5. Will leave this as archive purposes.
 
 This project is an online Seismic Senor based on MPU6050 accelerometer. It sends xy and z gravity changes during an earthquake and send it to MQTT server.
 
